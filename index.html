@@ -62,13 +62,55 @@
       gap: 10px;
       width: 100%;
     }
+
+    .header-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .left-controls {
+      order: 1;
+    }
+
+    .right-controls {
+      order: 3;
+    }
+
     h1 {
       text-align: center;
       color: #2c3e50;
       margin: 0;
       font-size: 18px;
       flex: 1;
+      order: 2;
     }
+
+    .mode-btn, .settings-btn, .history-btn {
+      width: auto !important;
+      margin-top: 0 !important;
+      padding: 8px 12px !important;
+      border-radius: 20px !important;
+      border: 1px solid #e0e0e0 !important;
+      background: white !important;
+      color: #333 !important;
+      font-size: 14px !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      white-space: nowrap !important;
+    }
+
+    .mode-btn:hover, .settings-btn:hover, .history-btn:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+      background: #f8f9fa !important;
+    }
+
     .input-section {
       margin-bottom: 12px;
       padding: 10px;
@@ -1114,16 +1156,18 @@
 <body>
   <div class="container">
     <div class="header">
-      <button class="control-btn mode-btn" onclick="window.toggleDetailMode()">
-        <span class="btn-icon">📱</span><span>简洁</span>
-      </button>
-      <h1>生姜经营计算器</h1>
-      <div class="header-controls">
-        <button class="control-btn history-btn" onclick="window.location.href='history.html'">
-          <span class="btn-icon">📜</span><span>历史</span>
+      <div class="header-controls left-controls">
+        <button class="mode-btn" onclick="toggleDetailMode()">
+          <span class="btn-icon">🔍</span>详细
         </button>
-        <button class="control-btn settings-btn" onclick="toggleSettings()">
-          <span class="btn-icon">⚙️</span><span>设置</span>
+      </div>
+      <h1>生姜经营计算器</h1>
+      <div class="header-controls right-controls">
+        <button class="history-btn" onclick="window.location.href='history.html'">
+          <span class="btn-icon">📜</span>历史
+        </button>
+        <button class="settings-btn" onclick="toggleSettings()">
+          <span class="btn-icon">⚙️</span>设置
         </button>
       </div>
     </div>
@@ -1647,9 +1691,6 @@
       <div class="settings-footer">
         <button onclick="saveDefaults()">保存设置</button>
         <button onclick="resetDefaults()">恢复默认</button>
-        <button onclick="window.location.href='history.html'" class="history-btn">
-          <span class="btn-icon">📜</span>历史
-        </button>
         <button onclick="toggleSettings()">关闭</button>
       </div>
     </div>
@@ -1670,7 +1711,7 @@
         fee: "",
         "box-cost": "155",
         "expense-ratio": "",
-        "calculation-type": "loss",
+        "calculation-type": "profit",
         "sale-type": "mud",
         mudFeeManual: false,    // 泥姜模式手动输入标记
         cleanFeeManual: false,  // 洗姜模式手动输入标记
