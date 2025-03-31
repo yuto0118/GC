@@ -2818,24 +2818,62 @@ document.getElementById('settings-panel').innerHTML += `
         copyText = copyText.replace(/\n{3,}/g, '\n\n').trim();
         
         // 复制到剪贴板
-        navigator.clipboard.writeText(copyText).then(() => {
-        // 显示成功提示
-        const tip = document.createElement('div');
-        tip.className = 'copy-success';
-        tip.textContent = '✓ 复制成功！';
-        document.body.appendChild(tip);
-        
-        // 2秒后移除提示
-        setTimeout(() => tip.remove(), 1500);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          // 现代浏览器API
+          navigator.clipboard.writeText(copyText).then(() => {
+            showCopySuccess();
+          }).catch(err => {
+            // 如果现代API失败，尝试备用方法
+            fallbackCopy(copyText);
+          });
+        } else {
+          // 备用复制方法
+          fallbackCopy(copyText);
+        }
 
-        // 恢复按钮状态
-        setTimeout(() => {
-          document.getElementById('copy-btn').style.display = 'none';
-          document.getElementById('calculate-btn').style.width = '100%';
-        }, 3000);
-      }).catch(err => {
-        alert('复制失败，请手动选择内容复制');
-      });
+        function fallbackCopy(text) {
+          // 创建一个临时输入框
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.left = '0';
+          textarea.style.top = '0';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          
+          try {
+            // 尝试执行复制命令
+            const successful = document.execCommand('copy');
+            if (successful) {
+              showCopySuccess();
+            } else {
+              alert('复制失败，请手动选择内容复制');
+            }
+          } catch (err) {
+            alert('复制失败，请手动选择内容复制');
+          }
+          
+          document.body.removeChild(textarea);
+        }
+        
+        function showCopySuccess() {
+          // 显示成功提示
+          const tip = document.createElement('div');
+          tip.className = 'copy-success';
+          tip.textContent = '✓ 复制成功！';
+          document.body.appendChild(tip);
+          
+          // 2秒后移除提示
+          setTimeout(() => tip.remove(), 1500);
+
+          // 恢复按钮状态
+          setTimeout(() => {
+            document.getElementById('copy-btn').style.display = 'none';
+            document.getElementById('calculate-btn').style.width = '100%';
+          }, 3000);
+        }
       }
 
       // 保留这个函数作为唯一的历史记录保存方法
